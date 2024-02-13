@@ -1,0 +1,135 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+"""
+
+# Nome da aluna: Janaina da Silva Fortirer
+# Número USP: 7871680
+# Curso: Bioinformática
+# Disciplina: IBI5011 Introdução à Computação para Bioinformática
+# Exercício-Programa EP3
+# Docente: Nami Kobayashi
+# Monitor: Rafael de Oliveira Magalhães
+
+"""
+          DECLARO QUE SOU O ÚNICO AUTOR E RESPONSÁVEL POR ESSE PROGRAMA.
+     TODAS AS PARTES ORIGINAIS DESTE EXERCÍCIO-PROGRAMA FORAM
+     DESENVOLVIDAS E IMPLEMENTADAS POR MIM SEGUINDO AS INSTRUÇÕES
+     DESSE EP E QUE PORTANTO NÃO CONSTITUEM DESONESTIDADE ACADÊMICA
+     OU PLÁGIO.
+         DECLARO TAMBÉM QUE SOU RESPONSÁVEL POR TODAS AS CÓPIAS DESTE
+     PROGRAMA E QUE EU NÃO DISTRIBUI OU FACILITEI A SUA DISTRIBUIÇÃO.
+     ESTOU CIENTE QUE OS CASOS DE PLÁGIO E DESONESTIDADE ACADÊMICA SERÃO
+     TRATADOS SEGUNDO OS CRITÉRIOS DIVULGADOS NA PÁGINA DA DISCIPLINA.
+
+     A seguir você pode descrever alguma ajuda que você recebeu para
+     fazer este EP.  Com exceção do material didático de IBI5011,
+     incluir qualquer ajuda recebida de outra pessoa ou de trecho de
+     código (indicando a página ou a fonte) para que o seu programa
+     não seja considerado plágio ou irregular.
+"""
+
+'''
+ Escreva um programa na linguagem Python 3.x para resolver o seguinte problema:
+    Seja dados um número inteiro positivo n e uma sequência de n números
+    inteiros positivos, representando possíveis números de CPF. Para cada um
+    dos inteiros da sequência, o programa deve calcular os dois dígitos
+    verificadores e imprimir se os dígitos verificadores do número fornecido
+    pelo usuário estão corretos ou não.
+'''
+
+# definindo funcao main e print o que o programa faz
+def main():
+    print()
+    print("Este programa testa se os dois dígitos verificadores de cada um dos n")
+    print("números de CPF fornecidos estão corretos ou não.")
+    print()
+
+# solicitando n inteiros ao usuario
+    n = int(input("\nDigite um inteiro positivo para n: "))
+    print()
+    print("Obs.: Um número de CPF deve ser fornecido como um único número inteiro de") # escrevendo obs para o usuario
+    print("onze dígitos (ou seja, sem os pontos e sem o hífen).")
+    print()
+    print("================================================================================")
+    print()
+
+# pedindo as datas ao usuário e verificando
+    contador = 1 # contador ate n CPF
+
+    while contador <= n: # contador vai ate n
+
+      cpf = int(input("Digite um número de CPF: ")) # entrada de n CPF
+      print() #pulando linha
+
+      fator = 9 # contador para multiplicar 9 vezes ate 1
+      fator2 = 10 # contador para multiplicar 10 vezes 0 ate 9
+
+      multi = 1 # multpliplicador para verificador 1
+      #multi2 = 1 # multpliplicador para verificador 1
+
+      soma = 0 # soma para verificador 1
+      soma2 = 0 # soma para verificador 2
+
+      contador = contador + 1 # atualiza contador
+      cpf9 = cpf // 100 #  pada deixar  os 9 primeiros digitos do cpf
+      dig = cpf9 % 10 # pega o ultimo digito
+      cpf9 = cpf9 // 10 # atualiza cpf
+
+      while fator >=0: # multiplica pelo digito n vezes
+        multi = dig * fator # multiplicando o digito por fator q vale 9 na primeira interacao
+        fator = fator - 1 # subtrai 1 do fator
+        soma = soma + multi # atribuindo os valores a soma
+        dig = cpf9 % 10 # pega o ultimo digito do cpf
+        cpf9 = cpf9 // 10 # atualiza cpf
+
+      verificador_1 = soma % 11 # atribuindo valor ao cpf
+      if verificador_1 == 10: # condicao se o verificador for 10
+          verificador_1 = 0 # atribui valor 0 ao verificado 10
+      print (f"O primeiro dígito verificador deve ser {verificador_1}.") # print verificador
+
+      cpf10 = (cpf//100) * 10 + verificador_1 # atualiza o cpf com os 9 digitos base + o 1º verfificador
+
+      while fator2 >=0: # interacao para conferir segundo verificador
+          multi = dig * fator2 # multiplica de 0 ate 9
+          fator2 = fator2 - 1 # subtrai 1 do fator
+          soma2 = soma2 + multi # atribui os valores na variavel soma
+          dig = cpf10 % 10 # pega o digito do cpf com 10 digitos
+          cpf10 = cpf10 // 10 # atualiza cpf
+
+      verificador_2 = soma2 % 11 # atribuindo verificador 2
+      if verificador_2 == 10: # condicao verificador igual a 10 atribui valor zero
+        verificador_2 = 0
+      print (f"O segundo dígito verificador deve ser {verificador_2}.")
+
+      trinca4 = cpf % 100 # variavel para a 1º trinca do cpf
+      cpf9 = cpf // 100 # atualiza valor
+      trinca3 = cpf9 % 1000 #  variavel para a 2º trinca do cpf
+      cpf6 = cpf9 // 1000 # atualiza valor
+      trinca2 = cpf6 % 1000 #  variavel para a 3º trinca do cpf
+      cpf3 = cpf6 // 1000 # atualiza valor
+      trinca1 = cpf3 % 1000 #  variavel para a 4º trinca do cpf
+      cpf_ultimo_digito = cpf % 10  # atribuindo o ultimo digito cpf
+      cpf10 = cpf // 10 # atualiza valor
+      cpf_penultimo_digito = cpf10 % 10  # atribuindo o penultimo digito cpf
+
+      print()
+      if verificador_1 == cpf_penultimo_digito and verificador_2 == cpf_ultimo_digito: # condicao que os 2 verificadores sao corretos
+          print(f"Os dois dígitos verificadores do CPF {trinca1:>03}.{trinca2:>03}.{trinca3:>03}-{trinca4:>02} estão corretos.")
+      elif verificador_1 != cpf_penultimo_digito and verificador_2 != cpf_ultimo_digito: # condicao os 2 verificadores sao errados
+          print(f"Os dois dígitos verificadores do CPF {trinca1:>03}.{trinca2:>03}.{trinca3:>03}-{trinca4:>02} estão incorretos.")
+      elif verificador_1 != cpf_penultimo_digito: # condicao o 1º verificador ta errado
+            print(f"O primeiro dígito verificador do CPF {trinca1:>03}.{trinca2:>03}.{trinca3:>03}-{trinca4:>02} está incorreto.")
+      elif verificador_2 != cpf_penultimo_digito: # 2º verificador ta errado
+              print(f"O segundo dígito verificador do CPF {trinca1:>03}.{trinca2:>03}.{trinca3:>03}-{trinca4:>02} está incorreto.")
+
+      print()
+      print("--------------------------------------------------------------------------------")
+      print()
+
+main()
+
+# fim programa
+
+# Agradecimentos: monitor Rafael e professora Nami pelo auxilio, tirando duvidas na elaboracao deste codigo
