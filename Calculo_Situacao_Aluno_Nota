@@ -1,0 +1,303 @@
+# Autoria: Janaina da Silva Fortirer
+#email: janainafortirer@gmail.com
+
+#  Módulo necessário para usar a função math.sqrt
+import math
+
+def main():
+    """ () --> NoneType
+    Programa que lê de um arquivo os dados de uma turma de alunos, e calcula e
+    escreve, para cada aluno, os dados que foram lidos, a sua media final e a
+    sua situacao: aprovado, reprovado ou em recuperação.
+    """
+    # escreve uma descrição resumida deste ep
+    print()
+    print("Este programa lê dados de uma turma de alunos, calcula a média final,")
+    print("os desvios padrão e determina a situação de cada aluno como:")
+    print("aprovado, reprovado ou em recuperação.")
+    print()
+    
+    #  lê de um arquivo as infos dos alunos de uma turma e
+    # constrói as listas nomesAlunos, mediasProvas e mediasEps
+    nomesAlunos, mediasProvas, mediasEps = le_trata_dados_entrada()
+
+    # escreve o número de alunos
+    numeroAlunos = len(nomesAlunos)
+
+    #  para cada aluno determina a média final e a situação, e
+    # constrói as listas mediasFinais e situacoes.
+    mediasFinais = []
+    situacoes = []
+
+    for i in range(numeroAlunos):
+        media_final, situacao = determina_media_situacao_aluno(mediasProvas[i],
+        mediasEps[i])
+        mediasFinais.append(media_final)
+        situacoes.append(situacao)
+        
+    # escreve uma linha com os rótulos das infos dos alunos
+    print(f"\n{'Nome do aluno':<36}{'MP':>5}{'MEP':>8}{'MF':>8}{'Sit':>8}")
+
+    # escreve as infos de todos os alunos
+    for i in range(len(nomesAlunos)):
+        print(f"{nomesAlunos[i]:<36}{mediasProvas[i]:>5.1f}"
+              f"{mediasEps[i]:>8.1f}{mediasFinais[i]:>8.1f}{' '*5}{situacoes[i]:}")
+   
+    # determina as (3) médias da turma e imprime
+    media_turma = determina_media_turma(mediasFinais)
+    print()
+    print(f"\n{'Medias da turma:':<36}{media_turma:>5.1f}"
+          f"{determina_media_turma(mediasEps):>8.1f}"
+          f"{determina_media_turma(mediasProvas):>8.1f}")
+
+    # determina os (3) desvios-padrão da turma e imprime
+    desvio_padrao_turma = determina_desvio_padrao(mediasFinais, media_turma)
+    print()    
+    print(f"{'Desvios-padrão da turma:':<36}"
+          f"{determina_desvio_padrao(mediasProvas, determina_media_turma(mediasProvas)):>5.1f}"
+          f"{determina_desvio_padrao(mediasEps, determina_media_turma(mediasEps)):>8.1f}"
+          f"{desvio_padrao_turma:>8.1f}")
+    print()
+    
+    #  determina as quantidades de alunos aprovados, em recuperação
+    # e reprovados
+    aprovados, recuperacao, reprovados = conta_alunos_ap_rec_rep(situacoes)
+
+    # escreve essas quantidades e as porcentagens correspondentes
+    totalAlunos = numeroAlunos
+    porcentagem_aprovados = (aprovados / totalAlunos) * 100
+    porcentagem_recuperacao = (recuperacao / totalAlunos) * 100
+    porcentagem_reprovados = (reprovados / totalAlunos) * 100
+    print(f"\nNúmero de alunos aprovados:{aprovados:>14} ({porcentagem_aprovados:>6.2f}%)")
+    print(f"Número de alunos em recuperação:{recuperacao:>9} ({porcentagem_recuperacao:>6.2f}%)")
+    print(f"Número de alunos reprovados:{reprovados:>13} ({porcentagem_reprovados:>6.2f}%)")
+
+    #  escreve as listagens dos alunos que foram aprovados,
+    # que ficaram de recuperação e que foram reprovados.
+    # Se alguma listagem for vazia, escreve uma mensagem relacionada.
+    # alunos aprovados 
+    print()
+    
+    # alunos aprovados
+    print()
+    print("-" * 80)
+    print()
+    if aprovados == 0:
+        print("Não tem nenhum aluno na situação Aprovado.")
+    elif aprovados > 0:
+        print(f"\nListagem com os {aprovados} alunos que foram aprovados:")
+        print()
+        print(f"\n{'Nome do aluno':<36}{'Média provas':>10}"
+              f"{'Média eps':>13}{'Média final':>17}")
+        
+        #funcao  lista situacao alunos
+        escreve_lista_alunos_mesma_situacao(situacoes, nomesAlunos, mediasProvas, mediasEps, mediasFinais, "Ap", aprovados)
+        
+    # alunos recuperacao
+    print()
+    print("-" * 80)
+    print()
+    if recuperacao == 0:
+        print("Não tem nenhum aluno na situação Recuperação.")
+    elif recuperacao > 0:
+        print(f"\nListagem com os {recuperacao} alunos que ficaram de recuperação:")
+        print()
+        print(f"\n{'Nome do aluno':<36}{'Média provas':>10}"
+              f"{'Média eps':>13}{'Média final':>17}")
+        
+        #funcao lista situacao alunos
+        escreve_lista_alunos_mesma_situacao(situacoes, nomesAlunos, mediasProvas, mediasEps, mediasFinais, "Rec", recuperacao)
+    
+    print()
+    print("-" * 80)
+    print()
+    if reprovados == 0:
+        print("Não tem nenhum aluno na situação Reprovado.")
+    elif reprovados > 0:
+        print(f"\nListagem com os {reprovados} alunos que foram reprovados:")
+        print()
+        print(f"\n{'Nome do aluno':<36}{'Média provas':>10}"
+              f"{'Média eps':>13}{'Média final':>17}")
+
+        #funcao lista situacao alunos
+        escreve_lista_alunos_mesma_situacao(situacoes, nomesAlunos, mediasProvas, mediasEps, mediasFinais, "Rep", reprovados)
+    print()
+    print("-" * 80)
+
+#.........................................................................
+#.....................  Definição das outras funções  ....................
+#.........................................................................
+
+def le_trata_dados_entrada():
+    ''' () --> (list, list, list)
+
+    Lê o nome de um arquivo com os dados de entrada e abre esse arquivo.
+    Lê as informações desse arquivo e constrói três listas: nomesAlunos,
+    mediasProvas e mediasEps. Fecha o arquivo e retorna as três listas.
+    '''
+
+    nomeArqEntra = input("Digite o nome do arquivo com os dados de entrada: ")
+    arqEntra = open(nomeArqEntra, 'r', encoding='utf-8')
+
+    #  readline() - lê a linha corrente de um arquivo e
+    #               retorna uma string com o conteúdo dessa linha
+    # Obs.: o caractere de nova linha é incluído no final da string
+
+    # lê o número de alunos da 1a. linha do arquivo de entrada
+    numAlunos = int(arqEntra.readline())  # voltar int
+
+    nomesAlunos = []
+    mediasProvas = []
+    mediasEps = []
+
+    for i in range(numAlunos):
+        # lê de uma linha do arquivo de entrada as infos de um aluno
+        linhaArq = arqEntra.readline()
+        # linhaArq referemcia a string com o conteúdo da linha lida do arquivo
+
+        infoAluno = linhaArq.split(';')
+        #  infoAluno referencia a lista com as strings de linhaArq
+        # separadas nas ocorrências de ';'
+
+        #  insere nas respectivas listas as infos de um aluno:
+        # nome, média de provas e média de eps
+        nomesAlunos.append(infoAluno[0])
+        mediasProvas.append(float(infoAluno[1]))
+        mediasEps.append(float(infoAluno[2]))
+
+    arqEntra.close()
+
+    return (nomesAlunos, mediasProvas, mediasEps)
+
+#.........................................................................
+#  para cada aluno determina a média final e a situação, e
+# constrói as listas mediasFinais e situacoes.
+
+def determina_media_situacao_aluno(mP, mEP):
+    ''' (float, float) --> (float, str)
+
+    Recebe dois números reais representando a média de provas e a média
+    de eps de um aluno. Calcula e retorna a média final desse aluno
+    e a sua situação ("Ap" ou "Rec" ou "Rep").
+    '''
+    # escreva a sua função a seguir
+    
+    if mP >= 5.0 and mEP >= 5.0:
+        mediaFinal = (mP+mEP) / 2
+    else:
+        if mP < mEP:
+            mediaFinal = mP
+        else:
+            mediaFinal = mEP
+    
+    # Determina a situação do aluno com base na média final
+    if mediaFinal >= 5.0:
+        situacao = "Ap"  
+    elif mediaFinal >= 3.0 and mediaFinal < 5.0:
+        situacao = "Rec" 
+    else:
+        situacao = "Rep" 
+
+    return mediaFinal, situacao 
+    
+#.........................................................................
+
+def determina_media_turma(notas):
+    ''' (list) --> float
+
+    Recebe uma lista notas com as notas de uma turma.
+    Retorna a média aritmética dos valores na lista notas.
+    '''
+
+    # escreva a sua função a seguir
+    
+    somaNotas = 0   
+    numeroNotas = 0 
+    
+    for i in notas:
+        somaNotas = somaNotas + i
+        numeroNotas = numeroNotas + 1
+    
+    mediaAritmetica = somaNotas / numeroNotas
+    
+    return mediaAritmetica       
+
+#.........................................................................
+
+def determina_desvio_padrao(notas, media):
+    ''' (list, float) --> float
+
+    Recebe uma lista notas com as notas de uma turma e
+    um número real media com a média aritmética dessas notas.
+    Retorna o desvio-padrão dos valores na lista notas.
+    '''
+
+    # escreva a sua função a seguir
+    if len(notas) > 1:
+        somaDiferenca= 0
+      
+        for x in notas:
+            somaDiferenca += (x - media) ** 2
+
+            desvioPadrao =  math.sqrt(somaDiferenca / (len(notas) - 1))
+          
+        return desvioPadrao
+    else:
+        return 0 # nota zero
+
+#.........................................................................
+
+def conta_alunos_ap_rec_rep(s):
+    ''' (list) --> (int, int, int)
+
+    Recebe uma lista s com a situação dos alunos.
+    Retorna os números de alunos aprovados, em recuperação e reprovados.
+    '''
+
+    # escreva a sua função a seguir
+    aprovados = 0
+    recuperacao = 0
+    reprovados = 0
+
+    for situacao in s:
+        if situacao == "Ap":
+            aprovados += 1
+        elif situacao == "Rec":
+            recuperacao += 1
+        elif situacao == "Rep":
+            reprovados += 1
+
+    return aprovados, recuperacao, reprovados
+
+#.........................................................................
+
+def escreve_lista_alunos_mesma_situacao(situacoes, nomes, medias_provas,
+                medias_eps, medias_aluno, uma_situacao, num_alunos_sit):
+    ''' (list, list, list, list, list, str, int) --> NoneType
+
+    Recebe uma lista situacoes com a situação dos alunos,
+    uma lista nomes com os nomes dos alunos, uma lista medias_provas
+    com as médias de provas, uma lista medias_eps com a média de eps,
+    uma lista medias_aluno com as médias finais dos alunos, uma string
+    uma_situacao que pode ser "Ap" ou "Rec" ou "Rep" e um inteiro
+    positivo num_alunos_sit com o número de alunos que estão na situção
+    uma_situacao.
+    Esta função escreve uma listagem com os nomes dos alunos que
+    ficaram na situação uma_situacao, e as suas respectivas médias de
+    provas, de eps e finais.
+    '''
+
+    # escreva a sua função a seguir
+    alunos_contados = 0
+    i = 0
+    
+    while alunos_contados < num_alunos_sit and i < len(situacoes):
+        if situacoes[i] == uma_situacao:
+            print(f"{nomes[i]:<36}{medias_provas[i]:>7.1f}"
+                  f"{medias_eps[i]:>15.1f}{medias_aluno[i]:>16.1f}")
+            alunos_contados += 1
+        i += 1
+#.........................................................................
+main()
+
+# fim codigo
