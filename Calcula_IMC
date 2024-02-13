@@ -1,0 +1,77 @@
+# Escreva um programa, na linguagem Python 3.x, que leia o nome, a idade, o peso e a altura de uma pessoa, e
+# determina o seu Índice de Massa Corporal (IMC). Além disso, seu programa deve responder, de acordo com o
+# IMC calculado, se essa pessoa está ou "abaixo" do peso ou "acima" do peso ou com o "peso normal".
+
+#Inicio programa
+#print  o que o programa faz
+print("Este programa determina o Índice de Massa Corporal (IMC) de uma pessoa.")
+print() # print para pular uma linha
+
+# ler nome do usuario
+nome = input("Digite o nome completo: ")
+
+#ler idade usuario
+idade = int(input("Digite a idade (em anos): "))
+
+#ler quilogramas
+# eh esperado que usuario insira em metros e separe por ponto
+# se inserir com virgula da erro
+peso = float(input("Digite o peso (em quilogramas): "))
+
+#ler altura 
+altura = float(input("Digite a altura (em metros): "))
+print() # para pular uma linha
+
+# formula para calcular imc
+imc = peso/(altura**2)
+#print(imc)  
+
+# formula para calcular peso normal
+peso_normal = (imc >= 18.5) and (imc<25)
+#print(peso_normal)
+
+# formula para calcular abaixo do peso
+abaixo_do_peso = (imc < 18.5)
+#print(abaixo_do_peso)
+
+# formula para calcular acima do peso
+acima_do_peso = (imc >=25)
+#print(acima_do_peso)
+
+# deixar numero inteiro
+inteiro_peso = int(peso)
+
+#atribuir numero em gramas
+gramas = (peso%inteiro_peso)
+#print(gramas)
+
+# multiplicar numero em gramas por 1000 para ter 3 unidades
+gramas_decimais = gramas*1000
+#print(gramas_decimais)
+
+# arredonda o numero e retira numeros depois da virgula
+# comando round arredonda numero
+inteiro_gramas_decimais = round(gramas_decimais)
+#print(inteiro_gramas_decimais)
+
+# deixa altura como inteiro
+int((altura%int(altura))*100)
+
+# print nome
+print("Nome:    ", nome) 
+# print idade
+print("Idade:   ", idade, "anos")
+#print peso e gramas separadamente
+print("Peso:    ", int(peso), "quilos e", round(gramas_decimais), "gramas" )
+# print altura como inteiro
+# fiz um comando para extrair e deixar a altura separado assim como fiz em peso
+# mas, para altura não fiz o passo a passo fiz tudo em uma linha
+print("Altura:  ", int(altura), "metro(s) e", round((altura%int(altura))*100), "centímetros"  )
+# print imc com unidade
+print("IMC:     ", imc, "kg/m²")
+
+print()# print para pular uma linha
+# print conclusão
+print ("Conclusão:")
+# print resultado para usuario
+print("Peso normal?", "(",peso_normal,")", "-- Abaixo do peso?", "(", abaixo_do_peso, ")","-- Acima do peso?", "(",acima_do_peso,")")
