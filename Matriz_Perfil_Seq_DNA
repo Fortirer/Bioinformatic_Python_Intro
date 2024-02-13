@@ -1,0 +1,224 @@
+#Autoria: Janaina da Silva Fortirer
+#email: janainafortirer@gmail.com
+
+def main():
+    """ ( ) --> NoneType
+    Dada uma coleção de sequências de DNA, todas com o mesmo comprimento n, 
+    determina a matriz perfil e uma sequência de DNA que seja o consenso dessa 
+    coleção.Depois,para cada sequência da coleção, mostra a relação dessa 
+    sequência com o consenso, calcula o número de posições em que elas coincidem 
+    e também a porcentagem correspondente com relação ao comprimento das sequências.
+    """
+    # imprimindo mensagem do programa
+    print("-" * 70)
+    print()
+    print("Este programa recebe uma coleção de sequências de DNA, determina\n"
+          "a matriz perfil e uma sequência de DNA que seja consenso dessa \n"
+          "coleção. Calcula o número de posições em que as strings coincidem,\n"
+          "mostra a porcentagem em relação ao comprimento das sequências.")
+    print()
+    print("-" * 70)
+    print()
+        
+    # chamando funcao que le e constroi colecao
+    listaSeqDNA = le_arquivo_constroi_colecao_seq()
+    print()
+    print(f"Coleção de {len(listaSeqDNA)} sequências de DNA de comprimento {len(listaSeqDNA[0])}:")
+    print()
+    for i in range (len(listaSeqDNA)):
+        print(f"{listaSeqDNA[i]}")
+    
+    # chamando funcao matriz perfil e constroi string
+    print()
+    matrizP = constroi_matriz_perfil(listaSeqDNA)
+    print("\n")
+    imprime_matriz(matrizP)
+    print("\n")
+    print("Sequência de DNA consenso")
+    print()
+    seqConsenso = constroi_string_consenso(matrizP)
+    print()
+    print(seqConsenso)
+    print("\n")
+    print()
+    print("Relação entre cada seq. da coleção com a seq. consenso\n")
+    print("\n")
+    seqConsenso = constroi_string_consenso(matrizP)
+    
+    ### Observação: Fiz as etapas a seguir, pois estava dando erro no alinhamneto
+    ### exemplo 10 strings, tentei ajustar com f string, mas sem sucesso. Então, 
+    ### criei uma variavel que recebe o valor máximo de digitos do alinhamento
+    ### assim o print fica ajustado, de acordo com o tamanho da string.
+    ### sugestão de utilizar f string --> Professora Nami
+    
+    # numero total da sequencia
+    total_sequencia = len(listaSeqDNA)
+    
+    # fazendo  while para ver quantos digitos tem total sequencia
+    cont = 0
+    divisor = 1
+    while total_sequencia // divisor > 0:
+        cont += 1
+        divisor *= 10
+        
+    # numero maximo de digitos da sequencia
+    max_seq_digits = cont
+    
+    # criando condicao para imprimir a marca, coincidencia e porcentagem
+    for i in range(len(listaSeqDNA)):
+        seq = listaSeqDNA[i]
+        marca, coincidencias, porcentagem = visualiza_coincidencias_pontuacao(seq, seqConsenso)
+
+        # usando f string mais tamanho maximo da seq para deixar ajustado
+        print(f"DNA {i + 1:{max_seq_digits}} :{' '}{seq}")
+        print(f"{' ' * (7 + max_seq_digits)}{marca}")
+        print(f"{' ' * (6 + max_seq_digits)} {seqConsenso}")
+
+        # ajustando formato porcentagem e arredondando com funcao round
+        formato_porcentagem = f"{round(porcentagem, 2):.2f}"
+        print(f"\n {coincidencias} coincidências representando {formato_porcentagem}%\n")
+
+    print("-" * 70)
+
+def le_arquivo_constroi_colecao_seq():
+    """ () --> (list)
+    Lê o nome de um arquivo com uma coleção de sequências de DNA, todas
+    de mesmo comprimento, e abre esse arquivo.
+    Lê as sequências desse arquivo e constrói uma lista de strings, listaSeqDNA,
+    ou seja, cada posição dessa lista referencia uma sequência lida.
+    Fecha o arquivo e retorna a lista criada.
+    """
+    nomeArqEntra = input("Digite o nome de um arquivo com uma coleção de seqs. de DNA:\n")
+    arqEntra = open(nomeArqEntra, 'r', encoding='utf-8') # r - de reading 
+
+    listaSeqDNA = []
+
+    for linha in arqEntra:
+        sequencia = linha.strip() # removendo espaco em branco
+        listaSeqDNA.append(sequencia)
+    
+    arqEntra.close()
+         
+    return listaSeqDNA
+
+def constroi_string_consenso(matrizP):
+    """ (matriz) --> str
+    Recebe uma matriz perfil matrizP de uma coleção de sequências de DNA.
+    A função constrói e retorna uma string que é um consenso para a
+    coleção de sequências cuja matriz perfil é matrizP.
+    """
+    consenso_string = ""
+
+    for i in range(len(matrizP[0])):
+        max_cont = 0
+        consenso_nucleotideo = ''
+
+        for j in range(len(matrizP)):
+            cont = matrizP[j][i]
+            if cont > max_cont:
+                max_cont = cont
+                consenso_nucleotideo = 'ACGT'[j]
+
+        consenso_string += consenso_nucleotideo
+
+    return consenso_string
+
+def visualiza_coincidencias_pontuacao(s, t):
+    """ (str, str) --> (str, int, float)
+    Recebe duas strings s e t, não vazias e de mesmo comprimento.
+    A função determina o número de posições em que as strings s e t coincidem,
+    construindo, ao mesmo tempo, uma string marca, contendo o símbolo ’|’ nas
+    posições em que o símbolo de s coincide com o símbolo correspondente de t,
+    e nas outras posições contém ’-’.
+    A função calcula também a porcentagem de coincidências com relação ao
+    comprimento das strings.
+    A função retorna a string marca, a quantidade de coincidências e a
+    porcentagem correspondente.
+    """
+    cont = 0
+    marca = ''
+
+    for i in range(len(s)):
+        if s[i] == t[i]:
+            cont += 1
+            marca += '|'
+        else:
+            marca += '-'
+
+    porcentagem = (cont / len(s)) * 100
+
+    return marca, cont, porcentagem
+
+def cria_matriz(nlin, ncol, valor):
+    """ (int, int, tipo do valor) --> matriz
+    Cria uma matriz com nlin linhas e ncol colunas,
+    sendo que cada elemento é igual a valor.
+    Retorna a matriz criada.
+    """
+    matriz = []
+    for i in range(nlin):
+        linha = [valor] * ncol
+        matriz.append(linha)
+    return matriz
+
+def constroi_matriz_perfil(listaSeqDNA):
+    """ (list) --> list
+    Recebe uma lista listaSeqDNA, contendo sequências de DNA,
+    todas de mesmo comprimento.
+    A função constrói e retorna a matriz perfil da coleção de
+    sequências na listaSeqDNA.
+    """
+    ncol = len(listaSeqDNA[0]) # num colunas
+    
+    matrizP = []
+    
+    for i in range (4): # fixei range com 4 porque são 4 linhas (ACGT)
+        linha = []
+        for j in range (ncol):
+            linha.append(0)
+        matrizP.append(linha)
+            
+    nucleotideo = 'ACGT'  # string para fazer comparacao
+
+    # condicao criada a partir de anotacoes de aula com a Professora Nami
+    for seq in listaSeqDNA:
+        for i in range(ncol):
+            nucleotideo = seq[i]
+            if nucleotideo == 'A':
+                matrizP[0][i] += 1 
+            elif nucleotideo == 'C':
+                matrizP[1][i] += 1
+            elif nucleotideo == 'G':
+                matrizP[2][i] += 1
+            elif nucleotideo == 'T':
+                matrizP[3][i] += 1
+
+    return matrizP
+
+def imprime_matriz(matriz):
+    """ (matriz) --> NoneType
+    Recebe uma matriz de inteiros.
+    Imprime um título com o número de linhas e de colunas da matriz.
+    Imprime a matriz no formato bidimensional e ajustada nas colunas.
+    Cada linha da matriz deve ser precedida por um dos quatro índices:
+    0, 1, 2 ou 3.
+    """
+    nlin = len(matriz)  
+    ncol = len(matriz[0])
+
+    # criando indices para adicionar na matriz
+    # a partir de sugestão das aulas da Professora Nami
+    indices_letras = ['A', 'C', 'G', 'T'] 
+
+    print(f"Matriz Perfil com {nlin} linhas e {ncol} colunas:\n")
+
+    for i in range(nlin):
+        print(f"'{indices_letras[i]:}' :", end='')
+        for j in range(ncol):
+            print(f"{matriz[i][j]:>3}", end='')
+        print()
+ 
+# chamando funcao principal
+main()
+
+# fim programa
