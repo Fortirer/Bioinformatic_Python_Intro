@@ -1,0 +1,103 @@
+Autoria: Janaina da Silva Fortirer
+email: janainafortirer@gmail.com
+"""
+  Escreva um programa, na linguagem Python 3.x, para resolver o seguinte
+problema: Sejam dados um número inteiro positivo n e uma sequência de n números
+reais. Para cada número real lido, que representa o valor do salário de um
+funcionário, determinar a porcentagem de aumento, o valor do aumento e o
+valor do novo salário após o aumento.
+
+"""
+def main():
+    """ () --> NoneType
+    Programa que recebe um número inteiro positivo n e uma
+    sequência de n números reais. Para cada número real lido,
+    determina a porcentagem de aumento, o valor do aumento e
+    o valor do novo salário após o aumento.
+    """
+    print("_" * 70)
+    print()
+    print("Este programa determina a porcentagem de aumento, o valor do aumento")
+    print("e o novo valor correspondente a cada um dos n salários fornecidos.")
+    print()
+    print("_" * 70)
+    print()
+
+    n = int(input("Digite um inteiro positivo para n: "))
+    #salario = 0
+    cont = 1
+    for i in range(n):
+      print()
+      salario = float(input(f"Digite o valor do {cont}o. salário: "))
+      print()
+      cont = cont + 1
+      percentual, aumento, novo_salario = determinaAumento(salario)
+
+      salario_formatado = formataValorEmReais (salario)
+      percentual_formatado = formataValorPercentual(percentual)
+      reais_formatado = formataValorEmReais(aumento)
+      novosalario_formatado = formataValorEmReais(novo_salario)
+
+      print()
+      print(f"O salário de R$ {salario_formatado} pode ter um aumento de {percentual_formatado}." )
+      print(f"Com o aumento de R$ {reais_formatado}, o novo salário será de R$ {novosalario_formatado}.")
+      print()
+      print("_" * 70)
+
+def determinaPercentual(x):
+    """ (float) --> float
+    Recebe um número real positivo x, que representa o valor de um salário,
+    e determina o percentual de aumento que pode ser aplicado a x.
+    A função determina o percentual de aumento de acordo com o que foi
+    descrito na observação do problema.
+    A função retorna o valor desse percentual.
+    """
+    if x > 10375:
+        percentual = 5
+    elif 7500 <= x <= 10375:
+        percentual = 6
+    elif 2850 < x < 7500:
+        percentual = 7.5
+    else:
+        percentual = 10
+
+    return percentual
+
+
+def determinaAumento(y):
+    """ (float) --> float, float, float
+    Recebe um número real positivo y, que representa o valor de um salário,
+    e determina três valores:
+    - o percentual de aumento que pode ser aplicado a y;
+    - o valor correspondente desse aumento e
+    - o valor resultante após o aumento.
+    A função retorna esses três valores (nessa ordem).
+    """
+    percentual_aumento = determinaPercentual(y)
+    valor_aumento = y * percentual_aumento / 100
+    novosalario = y + valor_aumento
+
+    return percentual_aumento, valor_aumento, novosalario
+
+def formataValorEmReais(val):
+    """ (float) --> str
+    Recebe um número real positivo val, que representa um valor em reais,
+    e constrói uma string num formato semelhante a "R$ d.ddd.ddd,dd".
+    A função retorna essa string.
+    """
+    string0 = f'{val:,.2f}'
+    string1 = f'{val:_.2f}'
+    string2 = string1.replace('.',',')
+    string3 = string2.replace('_','.')
+    return string3
+
+def formataValorPercentual(val):
+    """ (float) --> str
+    Recebe um número real positivo val, que representa uma porcentagem,
+    e constrói uma string num formato semelhante a "ddd,d%".
+    A funçãoo retorna essa string.
+    """
+    percentual_formatado = f'{val:.1f}%'.replace('.', ',')
+    return percentual_formatado
+
+main()
