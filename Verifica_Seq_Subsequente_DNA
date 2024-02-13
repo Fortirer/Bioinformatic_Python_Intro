@@ -1,0 +1,109 @@
+#Autoria: Janaina da Silva Fortirer
+#email: janainafortirer@gmail.com
+def main():
+    """ ( ) --> NoneType
+        Este programa recebe um número positivo n e uma sequência de n pares de
+        strings de DNA. Para cada par dna_s e dna_t de string de DNA, verifica 
+        se dna_s é uma subsequência de dna_t, construindo uma string comprovante.
+    """
+    print("-"*70)
+    print("Este programa recebe um número inteiro positivo e uma sequência de n"
+          "\npares de srings de DNA. Verifica se uma string de DNA (dna_s) é uma "
+          "\nsubsequência de outra string (dna_t).")
+    print("\nObservação: O tamanho da primeira string deve ser menor que o ")
+    print("tamanho da segunda string. Utilize somente letras maiusculas.")
+    print()
+    print("-"*70)
+    print()
+    
+    n = int(input("Digite um inteiro positivo para n: "))
+    print()
+
+    for i in range(n):
+        print(f"Par {i+1}")
+        dna_s = input("Digite a primeira string de DNA: ")
+        dna_t = input("Digite a segunda string de DNA: ")
+        print()
+        print(f"dna_s = '{dna_s}'")
+        print(f"dna_t = '{dna_t}'")
+        print()
+    
+        if len(dna_s) > len(dna_t):
+            print ("A string dna_s não pode ser uma subsequência da string dna_t.")
+            print()
+        else:
+            resultado, comprovante = testa_comprova_subsequencia(dna_s, dna_t)
+
+            if resultado:
+                print("A string dna_s é uma subsequência da string dna_t.")
+                print()
+                print("Veja um comprovante de como dna_s ocorre em dna_t")
+                visualiza_comprovante(dna_t, comprovante)
+                print()
+
+            else:
+                print("A string dna_s não é uma subsequência da string dna_t.")
+                print()
+                print("Veja um comprovante de que dna_s não ocorre em dna_t.")
+                visualiza_comprovante(dna_t, comprovante)
+                print()
+        
+        print("-"*70)
+            
+def testa_comprova_subsequencia(s, t):
+    """ (str, str) --> (bool, str)
+    Recebe duas strings não vazias, s e t, com o comprimento de s menor
+    ou igual ao comprimento de t.
+    Testa se s é uma subsequência de t, construindo um comprovante.
+    Retorna True ou False (de acordo com o resultado do teste) e o
+    comprovante construido.
+    """
+    i = 0
+    j = 0 
+    
+    comprovante = ""  
+
+    while i < len(s) and j < len(t):
+        if s[i] == t[j]:
+            comprovante = comprovante + s[i]
+            i += 1 
+        else:
+            comprovante = comprovante + "-"
+        j += 1
+        
+    comprovante = comprovante + "-" * (len(t) - len(comprovante))
+    
+    # insere no comprovante as letras que 'restaram' no fim do comprovante
+    if i < len(s):
+       comprovante = comprovante + s[i:]
+
+    if i == len(s):
+        return True, comprovante
+    else:
+        return False, comprovante
+
+def visualiza_comprovante(t, c):
+    """ (str, str) --> NoneType
+    Recebe duas strings não vazias, t e c.
+    A string c é um comprovante de que alguma string é ou não é uma
+    subsequência de t.
+    A função constrói uma string marca, contendo o símbolo ’|’ nas posições
+    onde o comprovante c indicar que um símbolo foi encontrado em t.
+    A função imprime as strings t, marca e c alinhadas.
+    """
+    
+    string_marca = ""
+    
+    for i in range(len(t)):
+        char = c[i]
+        if char != "-":
+            string_marca += "|"
+        else: 
+            string_marca += " "
+
+    print("\ndna_t:       ", t)
+    print("             ", string_marca)
+    print("comprovante: ", c)
+
+main()
+#Fim programa
