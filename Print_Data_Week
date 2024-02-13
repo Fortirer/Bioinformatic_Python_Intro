@@ -1,0 +1,121 @@
+# Autoria: Janaina da Silva Fortirer
+# email: janainafortirer@gmail.com
+'''
+Escreva um programa, na linguagem Python 3.x, para resolver o seguinte problema:
+Dados um numero inteiro positivo n e uma sequencia de n datas, imprimir, para
+cada data, o nome do dia da semana correspondente.
+O programa deve verificar se cada data fornecida e valida ou nao.
+Caso uma data nao seja valida, o programa deve imprimir uma mensagem
+descrevendo qual dos tres valores (o primeiro na ordem: ano, mes, dia)
+e invalido. Cada data consiste de tres numeros inteiros: dia, mes e ano
+(correspondente ao dia, mes e ano). Considere que mes = 1 corresponde a janeiro,
+mes = 2 corresponde a fevereiro, etc. Inicialmente, o seu programa deve
+verificar se a data fornecida, dia, mes e ano, ´e valida ou nao, seguindo
+os passos descritos a seguir:
+- testar se ano ´e maior ou igual a 1600;
+- testar se mes est´a entre 1 e 12;
+- determinar ultimoDiaMes, ou seja, o ultimo dia de mes;
+- testar se dia est´a entre 1 e ultimoDiaMes.
+Obs.: Para determinar o ultimo dia de mes, lembre-se que os meses
+1, 3, 5, 7, 8, 10 e 12 tem 31 dias, e os meses 4, 6, 9 e 11 tem 30 dias.
+No caso de mes representar o mes de fevereiro, para determinar o ultimo
+dia de mes, e preciso verificar antes se ano e bissexto.
+No Calend1ario Gregoriano, pode-se determinar diaDaSemana, ou seja,
+o dia da semana correspondente a
+uma data (dia, mes e ano), que esteja correta,
+utilizando as formulas descritas a seguir:
+'''
+
+# definindo funcao main e print o que o programa faz
+def main():
+    print("_____________________________________________________________")
+    print()
+    print("Este programa imprime o nome do dia da semana correspondente")
+    print("a cada uma das n datas fornecidas.")
+    print("_____________________________________________________________")
+
+    # solicitando n inteiros ao usuario
+    n = int(input("\nDigite um inteiro positivo para n: "))
+    print()
+
+# pedindo as datas ao usuário e calculando o dia da semana para cada data
+    contador = 1
+    while contador <= n:
+      print(f"\nData {contador}")
+      dia = int(input("Digite um inteiro (entre 1 e 31) para o dia: "))
+      mes = int(input("Digite um inteiro (entre 1 e 12) para o mês: "))
+      ano = int(input("Digite um inteiro (>= 1600) para o ano: "))
+      contador = contador+1
+
+# testar se ano eh maior ou igual a 1600;
+      if ano < 1600:
+        print(f"\nData fornecida com pelo menos o ano ({ano}) inválido.")
+        print()
+        print("________________________________________________________")
+      else:
+          if mes < 1 or mes >12: # testar se mes esta entre 1 e 12
+              print(f"\nData fornecida com pelo menos o mês ({mes}) inválido.")
+              print()
+              print("________________________________________________________")
+
+          else: # determinar ultimoDiaMes
+                  if mes == 1 or mes == 3 or mes == 5 or mes == 7 or mes == 8 or mes == 10 or mes == 12:
+                          ultimoDiaMes = 31
+                  else:
+
+                    if mes == 4 or mes == 6 or mes == 9 or mes == 11:
+                            ultimoDiaMes = 30
+                    else:
+
+                      if mes == 2:
+                            if (ano % 4 == 0 and ano % 100 and ano != 0) or (ano % 400 == 0):
+                                    ultimoDiaMes = 29
+                            else:
+                                    ultimoDiaMes = 28
+
+                  if dia < 1 or dia > ultimoDiaMes: # testar se dia esta entre 1 e ultimoDiaMes
+
+                          print(f"\nData fornecida com dia ({dia}) inválido.")
+                          print()
+                          print("________________________________________________________")
+
+                  else:
+                        # verificando dia da semana
+                        b = ((14-mes)//12)
+                        a = ano - b
+                        k = (a + (a//4)-(a//100)+(a//400))
+                        m = (mes + (12*b)-2)
+                        d = (dia + k + ((31*m)//12))
+                        diaDaSemana = d%7
+                        # atribuindo string ao valor numerico do dia da semana
+                        if diaDaSemana == 0:
+                              diaSemanaPrint = "Domingo"
+                        else:
+                            if diaDaSemana == 1:
+                                    diaSemanaPrint = "Segunda-feira"
+                            else:
+                                    if diaDaSemana == 2:
+                                        diaSemanaPrint = "Terça-feira"
+                                    else:
+                                        if diaDaSemana == 3:
+                                              diaSemanaPrint = "Quarta-feira"
+                                        else:
+                                                if diaDaSemana == 4:
+                                                      diaSemanaPrint = "Quinta-feira"
+                                                else:
+                                                      if diaDaSemana == 5:
+                                                            diaSemanaPrint = "Sexta-feira"
+                                                      else:
+                                                            if diaDaSemana == 6:
+                                                                    diaSemanaPrint = "Sábado"
+                        # print data e dia da semana
+                        print(f"\nData : {dia:02d}/{mes:02}/{ano}")
+                        print(f"Dia da semana : {diaSemanaPrint}")
+                        print()
+                        print("________________________________________________________")
+
+
+
+main() # chamando funcao mais
+
+# fim programa
